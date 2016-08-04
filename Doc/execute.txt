@@ -1,0 +1,34 @@
+the class clcnn is an encapsulation of the methods to execute an CNN on either CPU or OpenCL computing devices
+
+To use the class, you need first allocate an instance of the class using the a valid net configure file for a CNN. the cnstructor will automaticallly setup the data-structure to represent the network as well as setup an OpenCL context.
+
+Then you need to execute the getInput() function to get the input first. Then you can call either execute_device() or execute_cpu() to run the network on OpenCL device or CPU respectively. Finally you can call either predict() or retrieve_result() to get the classification or the regression. When you caring the execute time, the getCPUTime or getKernelTime can report the execution time.
+
+The APIs in the class:
+
+	clcnn::clcnn(const char*): the constructor takes a filename as input and initialize the instance using the configure file. internally it will call the load function at the first time. and will set up the data structure to represent the mlp NN as well as set the OpenCL environment.
+
+ int clcnn::getInput()  this function puts the input data into the proper position in a inner data-structure, namely the floar array h_input. when using this class under a specific environment, user need to modify this func. return 0 when the function works correctly, and -1 when a error happens
+
+int clcnn::execute_cpu()  this function will calculate the output from the input, and put the result in the float array h_output. the calculation is carried out by CPU, and execution time is recorded. return 0 when the function works correctly, and -1 when a error happens
+
+int clcnn::execute_device()  do the same job as execute_cpu, but the work is done by an OpenCL computing device, the execution time is recorded. return 0 when the function works correctly, and -1 when a error happens
+
+int clcnn::predict()  when the cnn is used to do classification. this function is used to return which class the input data belong to.
+
+int clcnn::retrieve_result(float*, int)  when the cnn is used to do regression, this function can be used to get the value, the result will be put in the space pointed by the first parameter, with the second parameter restrict the width. return 0 when the function works correctly, and -1 when a error happens
+
+float clcnn::getKernelTime()  when the calculation is carried under OpenCL, this function returns the execution time, unit is micro-second
+
+float clcnn::getCPUtime()  return the execution time on CPU, unit is micro-second.
+
+
+The Instructions on Macros:
+	WIN/UNIX: you need to define one depend on your OS, because the precise timer is different.
+
+	VISUAL: if this macro is defined, the input data will be visualized and show out.
+
+	TEST_PLAT/TEST_DEV: these two are used when testing, where you do not need to specify which platform and device to use. When you decide to use this, be careful, you may want to quary you machine first.
+
+	INTERACTIVE: if defined, you can mannully choose the OpenCL platform and device 
+

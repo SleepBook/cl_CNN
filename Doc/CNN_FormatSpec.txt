@@ -1,0 +1,197 @@
+this file specify the file format read by my CNN program
+the file contains the net configure is marked by .cnet
+the file contains the input image in marked by .cdat
+
+
+
+**********************************
+****FORMAT FOR .cnet FILES********
+**********************************
+line 0: layer number
+
+then each layer is declaried as a block, between blocks there should be one empty line:
+support layer type and their code: convolution(0), pooling(2), full connected(1) 
+
+conv layer format:
+
+line 0: 0(CONV)
+line 1: filter group size
+line 2: front feature map size
+line 3: filter width
+line 4: filter height
+line 5: stride
+following line are organized into sub-blocks, each sub-block represents a filter group
+block line 0:(tab)filter size in group 1
+block line x:(tab)(tab)front_featuremap_number weight ......
+block line x+1: bias for this filter
+
+
+pool layer format:
+line 0: 2(POOL)
+line 1: pooling method
+	current support MAX(code 0), AVERAGE(code 1)
+line 2: front feature map size
+line 3: filter width
+line 4: filter height
+
+full layer format:
+line 0:1 (FULL)
+line 1:Input dim
+line 2:Output dim
+line 3:Weights
+line 4:bias 
+
+
+AN EXAMPLE FOR LeNet:
+
+7
+
+0
+6
+1
+5
+5
+1
+	1
+		0 x x x x x x x x x x x x x x x x
+		bias
+	1
+		0 x x x x x x x x x x x x x x x x
+		bias
+	1
+		0 x x x x x x x x x x x x x x x x
+		bias
+	1
+		0 x x x x x x x x x x x x x x x x
+		bias
+	1
+		0 x x x x x x x x x x x x x x x x
+		bias
+	1
+		0 x x x x x x x x x x x x x x x x
+		bias
+2
+0
+6
+2
+2
+
+0
+16
+6
+5
+5
+1
+	3
+		0 x x x x x x
+		1 x x x x x x
+		2 x x x x x x
+		bias
+	3
+		1 x x x x x x
+		2 x x x x x x
+		3 x x x x x x
+		bias
+	3
+		2 x x x x x x
+		3 x x x x x x
+		4 x x x x x x
+		bias
+	3
+		3 x x x x x x
+		4 x x x x x x
+		5 x x x x x x
+	3
+		4 x x x x x x
+		5 x x x x x x
+		0 x x x x x x
+	3
+		5 x x x x x x
+		0 x x x x x x
+		1 x x x x x x
+	4
+		0 x x x x x x
+		1 x x x x x x 
+		2 x x x x x x 
+		3 x x x x x x 
+	4
+		4 x x x x x x
+		1 x x x x x x 
+		2 x x x x x x 
+		3 x x x x x x 
+	4
+		4 x x x x x x
+		5 x x x x x x 
+		2 x x x x x x 
+		3 x x x x x x 
+	4
+		0 x x x x x x
+		4 x x x x x x 
+		5 x x x x x x 
+		3 x x x x x x 
+	4
+		0 x x x x x x
+		1 x x x x x x 
+		4 x x x x x x 
+		5 x x x x x x 
+	4
+		0 x x x x x x
+		1 x x x x x x 
+		2 x x x x x x 
+		5 x x x x x x 
+	4
+		0 x x x x x x
+		1 x x x x x x 
+		4 x x x x x x 
+		3 x x x x x x 
+	4
+		4 x x x x x x
+		1 x x x x x x 
+		2 x x x x x x 
+		5 x x x x x x 
+	4
+		0 x x x x x x
+		5 x x x x x x 
+		2 x x x x x x 
+		3 x x x x x x 
+	6
+		0 x x x x x x
+		1 x x x x x x
+		2 x x x x x x
+		3 x x x x x x
+		4 x x x x x x
+		5 x x x x x x
+
+2
+0
+16
+2
+2
+
+1
+400
+120
+x x x x  x x x x x x
+bias
+
+1
+120
+84
+x x x x x x x xx x x x 
+bias
+
+1 
+84
+10
+x x x x x x x x x x x x x
+bias
+
+
+**********************************
+****FORMAT FOR .cdat FILES********
+**********************************
+
+line0: channel num
+line1: width
+line2: height
+line+: x
