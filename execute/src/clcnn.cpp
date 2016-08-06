@@ -1,4 +1,4 @@
-#include "clcnn.h"
+#include <clcnn.h>
 
 clcnn::clcnn(const char* net_file)
 {
@@ -413,9 +413,9 @@ int clcnn::load(const char* net_file)
 		}
 		std::cout << "please spicify the platform to use" << std::endl;
 		platnum = TEST_PLAT;
-#ifdef INTERACTIVE
+		#ifdef INTERACTIVE
 		std::cin >> platnum;
-#endif
+		#endif
 		err = clGetDeviceIDs(platforms[platnum], CL_DEVICE_TYPE_ALL, 0, 0, &num);
 		devices = (cl_device_id*)malloc(sizeof(cl_device_id)*num);
 		err = clGetDeviceIDs(platforms[platnum], CL_DEVICE_TYPE_ALL, num, devices, 0);
@@ -431,9 +431,9 @@ int clcnn::load(const char* net_file)
 		}
 		std::cout << "please spicify the device to use" << std::endl;
 		devnum = TEST_DEV;
-#ifdef INTERACTIVE
+		#ifdef INTERACTIVE
 		std::cin >> devnum;
-#endif
+		#endif
 		cl_context_properties prop[] = { CL_CONTEXT_PLATFORM, reinterpret_cast<cl_context_properties>(platforms[platnum]), 0 };
 		context = clCreateContext(prop, 1, &devices[devnum], NULL, NULL, &err);
 		if (context == 0) {
@@ -446,7 +446,7 @@ int clcnn::load(const char* net_file)
 			//return 0;
 		}
 
-		program = load_program(context, devices[devnum], "shader.cl");
+		program = load_program(context, devices[devnum], "../data/shader.cl");
 		if (program == 0) {
 			std::cerr << "Can't load or build program\n";
 		}
@@ -609,7 +609,7 @@ int clcnn::getInput()
 	//a file as input
 	FILE* input_data;
 	int i, j, k;
-	input_data = fopen("test.cdat", "r");
+	input_data = fopen("../data/test.cdat", "r");
 	int input_channel, input_width, input_height;
 	fscanf(input_data, "%d", &input_channel);
 	fscanf(input_data, "%d", &input_width);
@@ -630,7 +630,7 @@ int clcnn::getInput()
 			for (k = 0; k < input_width; k++)
 			{
 				fscanf(input_data, "%f", &inter_res[0][i][j][k]);
-#ifdef VISUAL
+				#ifdef VISUAL
 				if (inter_res[0][i][j][k]>0.1)
 				{
 					printf("*");
@@ -639,11 +639,11 @@ int clcnn::getInput()
 				{
 					printf(" ");
 				}
-#endif
+				#endif
 			}
-#ifdef VISUAL
+			#ifdef VISUAL
 			printf("\n");
-#endif
+			#endif
 		}
 	}
 	fclose(input_data);
@@ -677,7 +677,7 @@ int clcnn::execute_cpu()
 		load_cpu();
 		cpu_load_num++;
 	}
-#ifdef WIN
+	#ifdef WIN
 	LARGE_INTEGER large_int;
 	double diff;
 	__int64 c1, c2;
@@ -686,13 +686,13 @@ int clcnn::execute_cpu()
 	diff = large_int.QuadPart;
 	QueryPerformanceCounter(&large_int);
 	c1 = large_int.QuadPart;
-#endif
-#ifdef UNIX
+	#endif
+	#ifdef UNIX
 	long star, endd;
 	struct timeval tv;
 	gettimeofday(&tv, NULL);
 	star = tv.tv_usec;
-#endif
+	#endif
 	int i,j,k,m,n;
 	for(i=0;i<layer_num;i++)
 	{
@@ -859,16 +859,16 @@ int clcnn::execute_cpu()
 			}		
 		}
 	}
-#ifdef WIN
+	#ifdef WIN
 	QueryPerformanceCounter(&large_int);
 	c2 = large_int.QuadPart;
 	CPUtime = (float)((c2-c1)*1e06/diff);
-#endif
-#ifdef UNIX
+	#endif
+	#ifdef UNIX
 	gettimeofday(&tv, NULL);
 	endd = tv.tv_usec;
 	CPUtime = (float)(endd - star);
-#endif
+	#endif
 
 	return 0;
 }
@@ -1066,7 +1066,7 @@ int clcnn::exe_conv_device(int* layer_pos, int flag)
 			}
 			max_group_size[i] = max_grp_sz;
 		}
-#ifdef FLEX_THREAD_NUM
+		#ifdef FLEX_THREAD_NUM
 		//for temporial test purpose
 		if(i==0)
 		{
@@ -1074,7 +1074,7 @@ int clcnn::exe_conv_device(int* layer_pos, int flag)
 			max_group_size[i] = 330;
 
 		}		
-#endif
+		#endif
 		if((launch_mode = launch_info[i][0]) == -1)
 		{
 			if(max_grp_sz >= conv_w*conv_h*linknum)
@@ -1248,7 +1248,7 @@ int clcnn::exe_conv_device(int* layer_pos, int flag)
 		layer_time[i] = ((cl_ulong)(end - start))*1e-03;
 		(*layer_pos)++;
 
-#ifdef DEV_DEBUG
+		#ifdef DEV_DEBUG
 		float* itck;
 		itck = (float*)malloc(sizeof(float)*group_num*out_w*out_h);
 		if (flag)
@@ -1293,7 +1293,7 @@ int clcnn::exe_conv_device(int* layer_pos, int flag)
 			printf("==========================\n");
 		}
 		free(itck);
-#endif
+		#endif
 	}
 	else
 	{
