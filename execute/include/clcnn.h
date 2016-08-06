@@ -1,5 +1,5 @@
 #ifndef CLCNN_H
-#define CNCNN_H
+#define CLCNN_H
 
 #include <iostream>
 #include <fstream>
@@ -9,28 +9,24 @@
 #include <cstdio>
 #include <cmath>
 #include <ctime>
-
 #ifdef __APPLE__
 #include <OpenCL/opencl.h>
 #else
 #include <CL/cl.h>
 #endif
 
-#define WIN
-//#define UNIX
-
+//#define WIN
+#define UNIX
 #ifdef WIN
 #include<Windows.h>
 #endif
-
 #ifdef UNIX
 #include <sys/time.h>
 #endif
 
 #define DEBUG_MODE 0 //will print extra information
-#define GPU_DEBUG_MODE 1// will print the inter res on GPU
-#define TESTING_MODE 1
-#define TEST_PLAT 1
+
+#define TEST_PLAT 0
 #define TEST_DEV 0
 
 #define INPUT_WIDTH 28
@@ -56,10 +52,9 @@ public:
 	float getCPUTime();
 	float getLoadTime();
 
-
 	clcnn(const char* net_file);
 	~clcnn();
-	cl_kernel convp_sig_avg_full, convp_sig_avg_mc, convp_sig_avg_pc;//here mc stands for multi-channel, pc stands for partial channel
+	cl_kernel convp_sig_avg_full, convp_sig_avg_mc, convp_sig_avg_pc;
 	cl_kernel fc_sig, fcp_sig;
 	float* layer_time;
 
@@ -67,14 +62,11 @@ private:
 	int load_num;
 	int cpu_load_num;
 	int device_load_num;
-	//clcnn(const char* net_file);
-	//~clcnn();
 
 	int load(const char* net_file);
 	void load_cpu();
 	void load_device();
 	cl_program load_program(cl_context context, cl_device_id device, const char* filename);
-
 	
 	int exe_conv_device(int* layer_pos, int flag);
 	int exe_pool_device(int* layer_pos, int flag);
@@ -94,8 +86,6 @@ private:
 	cl_context context;
 	cl_command_queue queue;
 	cl_program program;
-	
-	//cl_kernel convp_sig_max,  convp_tanh_max, convp_tanh_avg, fc, conv_sig, conv_tanh, pool;
 	cl_event timer;
 	cl_ulong start, end, elipse;
 
@@ -131,7 +121,6 @@ private:
 
 	int **launch_info;
 	int *max_group_size;
-
 
 	/////////////////////////////////////////////
 	//varible for DS on device
