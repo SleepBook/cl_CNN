@@ -6,18 +6,15 @@ int main()
 	float* res;
 	res = (float*)malloc(sizeof(float)*10);
 	int pred;
-	float kernel_time,CPUtime;
+	float exe_time;
 	clcnn lenet("../data/test.cnet");
 	for(i=0;i<1;i++)
 	{
-		printf(" %d cnn call\n",i);
-		lenet.getInput();
-		lenet.execute_device();
-		//lenet.execute_cpu();
+		lenet.execute_device("../data/test.cdat");
+	//	lenet.execute_cpu("../data/test.cdat");
 		pred = lenet.predict();
 		lenet.retrieve_result(res, 10);		
-		kernel_time = lenet.getKernelTime();
-		//CPUtime = lenet.getCPUTime();
+		exe_time = lenet.get_execution_time();
 		
 		for (j = 0; j < 10; j++)
 		{
@@ -26,6 +23,5 @@ int main()
 		printf("\n");
 		
 	}
-	getchar();
 	return 0;
 }

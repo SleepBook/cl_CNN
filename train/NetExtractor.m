@@ -3,7 +3,8 @@
 %written by oar, 30/04/2016
 
 f = fopen('output/test.cnet','w');
-fprintf(f,'7\n\n');
+fprintf(f,'7\n');
+fprintf(f,'28 28 1\n\n');
 
 for i = 1:7
     if lenet.layers{i+1}.type(1) == 'C'
